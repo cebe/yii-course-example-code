@@ -49,6 +49,9 @@ class User extends CActiveRecord
 
 			array('profile', 'safe', 'on' => 'register'),
 
+			// TODO define dependent validation for employed and company
+
+
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, username, password, profile, created, updated', 'safe', 'on'=>'search'),
@@ -61,6 +64,7 @@ class User extends CActiveRecord
 			$this->addError($attribute, 'You need to specify a good password!<br/>Hint: ' . $params['pw'] . ' might be a good one.');
 		}
 	}
+
 
 	/**
 	 * @return array relational rules.

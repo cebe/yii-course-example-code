@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
+<div class="form wide">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'user-form',
@@ -35,7 +35,22 @@
 		<?php echo $form->error($model,'profile'); ?>
 	</div>
 
-	<!-- TODO implement dependend dropdown here -->
+	<div class="row">
+		<?php echo $form->labelEx($model,'employed'); ?>
+		<?php echo $form->radioButtonList($model,'employed',array(
+				1 => 'Yes',
+				0 => 'No',
+			)
+		); ?>
+		<?php echo $form->error($model,'employed'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'company'); ?>
+		<?php echo $form->textField($model,'company',array('rows'=>6, 'cols'=>50)); ?>
+		<?php echo $form->error($model,'company'); ?>
+	</div>
+
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>

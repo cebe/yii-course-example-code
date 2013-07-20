@@ -133,6 +133,7 @@ return array(
 
 			'enableSkin' => true,
 
+			// skins are located in /protected/views/skins/
 			'widgets' => array(
 				'CLinkPager' => array(
 					'skin' => 'short',

@@ -8,6 +8,8 @@
  * @property string $username
  * @property string $password
  * @property string $profile
+ * @property string $employed
+ * @property string $company
  * @property string $created
  * @property string $updated
  *
@@ -16,6 +18,19 @@
  */
 class User extends CActiveRecord
 {
+//	public function behaviors()
+//	{
+//		return array(
+//			'timeStamp' => array(
+//				'class' => 'CTimestampBehavior',
+//				'createAttribute' => 'created',
+//				'updateAttribute' => 'updated',
+//
+//			)
+//		);
+//	}
+
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -50,12 +65,33 @@ class User extends CActiveRecord
 			array('profile', 'safe', 'on' => 'register'),
 
 			// TODO define dependent validation for employed and company
+			array('employed', 'in', 'range' => array(0, 1)),
 
+			array('company', 'validateCompany'),
+
+			array('company', 'default', 'value' => null),
 
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, username, password, profile, created, updated', 'safe', 'on'=>'search'),
 		);
+	}
+
+	// dependend validation using a custom validator
+	public function validateCompany()
+	{
+		if ($this->employed) {
+			$validator = CValidator::createValidator('required', $this, 'company', array(
+				'message' => 'This field depends on "' .
+							 $this->getAttributeLabel('employed') .
+							 '" and must not be empty.'
+			));
+			$validator->validate($this);
+			$validator = CValidator::createValidator('length', $this, 'company', array('max'=>'25'));
+			$validator->validate($this);
+		} else {
+			$this->company = null;
+		}
 	}
 
 	public function matchPassword($attribute, $params)

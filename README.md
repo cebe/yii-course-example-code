@@ -14,6 +14,18 @@ Covered Topics
 - **Using action classes and action providers**
   - [protected/controllers/PostController.php line 11](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/controllers/PostController.php#L11)
   - [protected/controllers/actions/UpdateAction.php](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/controllers/actions/UpdateAction.php)
+- **authentication against a database**
+  - [protected/components/UserIdentity.php](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/components/UserIdentity.php)
+- **caching**
+  - [protected/controllers/UserController.php line 166](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/controllers/UserController.php#L166)
+- **using cache dependency**
+  - [protected/components/ExampleDependency.php](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/components/ExampleDependency.php)
+  - [protected/controllers/UserController.php line 215](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/controllers/UserController.php#L215)
+- **proper model loading** (avoid SQL injection!)
+  - [protected/controllers/UserController.php line 138](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/controllers/UserController.php#L138)
+- **ajax and client validation**
+  - [protected/views/user/_form.php line 11](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/views/user/_form.php#L11)
+  - [protected/controllers/UserController.php line 90](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/controllers/UserController.php#L90)
 - more to be described soon ...
 
 

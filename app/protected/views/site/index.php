@@ -18,3 +18,23 @@ $this->pageTitle=Yii::app()->name;
 the <a href="http://www.yiiframework.com/doc/">documentation</a>.
 Feel free to ask in the <a href="http://www.yiiframework.com/forum/">forum</a>,
 should you have any questions.</p>
+
+<!-- ajax.php:
+Hello World!
+<?php echo date('H:i:s'); ?>
+-->
+
+<?php echo CHtml::ajaxLink(
+	'click here',
+	array('site/ajax'),
+	array(
+		'update' => '#ajaxdiv'
+	)
+
+); ?>
+
+<div id="ajaxdiv">nothing here</div>
+
+<div class="progress">
+  <div class="bar" style="width: 60%;"></div>
+</div>

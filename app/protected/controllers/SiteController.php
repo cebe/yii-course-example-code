@@ -41,6 +41,11 @@ class SiteController extends Controller
 		Yii::endProfile('view');
 	}
 
+	public function actionAjax()
+	{
+		$this->renderPartial('ajax');
+	}
+
 	/**
 	 * This is the action to handle external exceptions.
 	 */

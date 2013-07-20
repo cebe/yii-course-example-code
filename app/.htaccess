@@ -1,0 +1,8 @@
+RewriteEngine on
+
+# Only redirect when it is not a file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Leite andernfalls auf index.php um
+RewriteRule . index.php

@@ -8,6 +8,28 @@ class PostController extends Controller
 	 */
 	public $layout='//layouts/column2';
 
+	public function actions()
+	{
+		return array(
+			'update' => array(
+				'class' => 'application.controllers.actions.UpdateAction',
+				'modelClass' => 'Post',
+			),
+			'captcha.' => array(
+				'class' => 'CCaptcha',
+				'captcha' => array(
+					'font' => 'whatever',
+				),
+			),
+		'fun.' => array(
+			'class' => 'OtherWidget',
+			'captcha' => array(
+				'font' => 'whatever',
+			),
+		)
+		);
+	}
+
 	/**
 	 * @return array action filters
 	 */
@@ -83,7 +105,7 @@ class PostController extends Controller
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
-	 */
+	 * /
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);

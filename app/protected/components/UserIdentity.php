@@ -17,17 +17,27 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		$users=array(
-			// username => password
-			'demo'=>'demo',
-			'admin'=>'admin',
-		);
-		if(!isset($users[$this->username]))
+		// find the user in the database by username
+//		$user = User::model()->findByAttributes(array(
+//			'username' => $this->username
+//		));
+
+		// nicer way: find the user in the database by username and email
+		$user = User::model()->find('username=:name OR email=:name', array(
+			':name' => $this->username
+		));
+
+		if($user === null) {
 			$this->errorCode=self::ERROR_USERNAME_INVALID;
-		elseif($users[$this->username]!==$this->password)
+		// IMPORTANT NOTE: of course your password should not be stored
+		// as plain text in the DB! Use Hashing for this!
+		// As of version 1.1.14 there is a Yii helper for this:
+		// http://www.yiiframework.com/doc/api/1.1/CPasswordHelper
+		} elseif(!CPasswordHelper::verifyPassword($this->password, $user->password)) {
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
-		else
+		} else {
 			$this->errorCode=self::ERROR_NONE;
+		}
 		return !$this->errorCode;
 	}
 }

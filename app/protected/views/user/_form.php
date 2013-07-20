@@ -47,7 +47,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'company'); ?>
-		<?php echo $form->textField($model,'company',array('rows'=>6, 'cols'=>50)); ?>
+		<?php echo $form->textField($model,'company'); ?>
 		<?php echo $form->error($model,'company'); ?>
 	</div>
 

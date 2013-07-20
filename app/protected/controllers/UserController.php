@@ -8,6 +8,16 @@ class UserController extends Controller
 	 */
 	public $layout='//layouts/column2';
 
+	public function actions()
+	{
+		return array(
+			'update' => array(
+				'class' => 'application.controllers.actions.UpdateAction',
+				'modelClass' => 'User',
+			),
+		);
+	}
+
 	/**
 	 * @return array action filters
 	 */
@@ -37,7 +47,7 @@ class UserController extends Controller
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'roles'=>array('deleteUser', 'manageUser'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -51,8 +61,20 @@ class UserController extends Controller
 	 */
 	public function actionView($id)
 	{
+		// check whether user has access to update and show link if yes
+
+		/** @var CWebUser $user */
+		$user = Yii::app()->user;
+		$showLink = false;
+		if ($user->checkAccess('updateProfile', array(
+			'id' => $id
+		))) {
+			$showLink = true;
+		}
+
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
+			'showLink' => $showLink,
 		));
 	}
 
@@ -62,9 +84,9 @@ class UserController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new User('register');
+		$model=new User('register'); // 'register' is the scenario
 
-		// Uncomment the following line if AJAX validation is needed
+		// the following line is to handle AJAX validation when enabled in the form
 		$this->performAjaxValidation($model);
 
 		if(isset($_POST['User']))
@@ -79,29 +101,32 @@ class UserController extends Controller
 		));
 	}
 
+	// update action has been moved to a separate class:
+	// /protected/controllers/actions/UpdateAction.php
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['User']))
-		{
-			$model->attributes=$_POST['User'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
-	}
+//	public function actionUpdate($id)
+//	{
+//		$model=$this->loadModel($id);
+//
+//		// Uncomment the following line if AJAX validation is needed
+//		$this->performAjaxValidation($model);
+//
+//		if(isset($_POST['User']))
+//		{
+//			$model->attributes=$_POST['User'];
+//			if($model->save())
+//				$this->redirect(array('view','id'=>$model->id));
+//		}
+//
+//		$this->render('update',array(
+//			'model'=>$model,
+//		));
+//	}
 
 	/**
 	 * Deletes a particular model.
@@ -110,7 +135,21 @@ class UserController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		// THIS IS WRONG as it is vulnerable to SQL injection!
+		//$id = "'; DROP TABLE *;";
+		$user = User::model()->find("id=$id");
+
+		// always use parameters for SQL:
+		$user = User::model()->find("id=:id", array(':id' => $id));
+
+		// this is fine too as it uses parameters interally:
+		$user = User::model()->findByPk($id);
+
+		// best way to wrap the loading in a method like loadModel()
+		// which also cares about throwing 404 error when model does not exist.
+		$user = $this->loadModel($id);
+
+		$user->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -123,6 +162,27 @@ class UserController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('User');
+
+		// example of simple cache usage
+
+		// NOTE: doing it this way will cause pagination to break.
+		// it is just a simple example so we disable sorting and paging:
+		$dataProvider->pagination = false;
+		$dataProvider->sort = false;
+
+		/** @var CCache $cache */
+		$cache = Yii::app()->cache;
+
+		$users = $cache->get('users');
+		if ($users === false) {
+			$users = $dataProvider->getData();
+
+			$cache->set('users', $users);
+		}
+		$dataProvider->data = $users;
+
+
+
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -152,7 +212,11 @@ class UserController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=User::model()->findByPk($id);
+		// using cache dependency:
+		$dependency = new ExampleDependency();
+		// cache will expire after 60 seconds OR when cache dependency data changed
+		$model=User::model()->cache(60, $dependency)->findByPk($id);
+
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

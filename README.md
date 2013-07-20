@@ -41,8 +41,12 @@ Covered Topics
 - **widget skins**
   - [protected/views/skins](https://github.com/cebe/yii-course-example-code/tree/master/app/protected/views/skins)
   - [protected/config/main.php line 131](https://github.com/cebe/yii-course-example-code/blob/master/app/protected/config/main.php#L131)
-- more to be described soon ...
 
+There is even more inside, just browse the code.
+
+If you have any questions, feel free to contact me at mail@cebe.cc.
+
+More information about the Yii training course is available [at my website](http://www.cebe.cc/training).
 
 
 

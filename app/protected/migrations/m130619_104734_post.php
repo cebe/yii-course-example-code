@@ -2,34 +2,31 @@
 
 class m130619_104734_post extends CDbMigration
 {
+	/**
+	 * This method contains the logic to be executed when applying this migration.
+	 * @return boolean
+	 */
 	public function up()
 	{
 		$this->createTable('posts', array(
 			'id' => 'pk',
-			'title' => 'string',
+			'title' => 'string NOT NULL',
 			'content' => 'text',
 			'tags' => 'string',
 			'status' => 'integer',
 			'authorId' => 'integer',
-			'created' => 'datetime',
+			'created' => 'datetime NOT NULL',
 			'updated' => 'datetime',
 			'FOREIGN KEY(authorId) REFERENCES users(id)'
 		));
 	}
 
+	/**
+	 * This method contains the logic to be executed when removing this migration.
+	 * @return boolean
+	 */
 	public function down()
 	{
 		$this->dropTable('posts');
 	}
-
-	/*
-	// Use safeUp/safeDown to do migration with transaction
-	public function safeUp()
-	{
-	}
-
-	public function safeDown()
-	{
-	}
-	*/
 }
